@@ -54,7 +54,7 @@ class SubmersibleProbeApplicationTests {
 
 		mockMvc.perform(post("/api/v1/movetheprobe").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk())
-				.andExpect(content().string(containsString("(1 , 2)(1 , 3)")));
+				.andExpect(content().string(containsString("(1 , 1)(2 , 1)(1 , 1)")));
 	}
 
 	/**

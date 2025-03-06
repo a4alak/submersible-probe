@@ -43,6 +43,7 @@ public class SubmersibleProbe {
 			y_axis = new_y;
 			visitedLocation.add(new Position(x_axis, y_axis));
 		}
+
 	}
 
 	public void moveProbeBackward(Grid grid) {
