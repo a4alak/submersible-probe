@@ -1,32 +1,24 @@
 package com.wealthcdio.apimanagement.model;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SubmersibleProbe {
 	private int x_axis, y_axis;
 	private Direction directionMoveed;
-	private final Set<String> visitedLocation;
+	private final List<Position> visitedLocation = new ArrayList<Position>();
 
 	public SubmersibleProbe(int x, int y, Direction directionMoveed) {
-		super();
 		this.x_axis = x;
 		this.y_axis = y;
 		this.directionMoveed = directionMoveed;
-		this.visitedLocation = new LinkedHashSet<String>();
-		visitedDone();
-	}
-
-	private void visitedDone() {
-		visitedLocation.add(x_axis + "," + y_axis);
+		visitedLocation.add(new Position(x, y));
 	}
 
 	public String getThePosition() {
-		return x_axis + "," + y_axis + " direction facing " + directionMoveed;
-	}
-
-	public Set<String> getVisitedLocation() {
-		return visitedLocation;
+		return visitedLocation.stream().map(p -> "(" + p.getX_axix() + " , " + p.getY_axix() + ")")
+				.collect(Collectors.joining());
 	}
 
 	public void trunLeftDirection() {
@@ -37,23 +29,36 @@ public class SubmersibleProbe {
 		directionMoveed = directionMoveed.moveToRightSide();
 	}
 
-	public void moveProbe(Grid grid, boolean forward) {
+	public void moveProbeForward(Grid grid) {
+		int new_x = x_axis, new_y = y_axis;
 
-		int new_X = x_axis, new_Y = y_axis;
-		
-		// here North and South in Y axis and East and West in X axis
-		
 		switch (directionMoveed) {
-			case NORTH -> new_Y += forward ? 1 : -1;
-			case SOUTH -> new_Y += forward ? -1 : 1;
-			case EAST -> new_X += forward ? 1 : -1;
-			case WEST -> new_X += forward ? -1 : 1;
+		case NORTH -> new_y += 1;
+		case EAST -> new_x += 1;
+		case SOUTH -> new_y += 1;
+		case WEST -> new_x += 1;
 		}
+		if (grid.isWintinlimit(new_x, new_y) && !grid.isObstacle(new_x, new_y)) {
+			x_axis = new_x;
+			y_axis = new_y;
+			visitedLocation.add(new Position(x_axis, y_axis));
+		}
+	}
 
-		if (grid.isWintinlimit(new_X, new_Y) && !grid.isObstacle(new_X, new_Y)) {
-			this.x_axis = new_X;
-			this.y_axis = new_Y;
-			visitedDone();
+	public void moveProbeBackward(Grid grid) {
+
+		int new_x = x_axis, new_y = y_axis;
+
+		switch (directionMoveed) {
+		case NORTH -> new_y -= 1;
+		case EAST -> new_x -= 1;
+		case SOUTH -> new_y -= 1;
+		case WEST -> new_x -= 1;
+		}
+		if (grid.isWintinlimit(new_x, new_y) && !grid.isObstacle(new_x, new_y)) {
+			x_axis = new_x;
+			y_axis = new_y;
+			visitedLocation.add(new Position(x_axis, y_axis));
 		}
 	}
 
