@@ -1,9 +1,9 @@
-<B>Assumption</B>
+## Assumption
 
-# submersible-probe
-Request Json Body :
-http://localhost:8080/api/v1/movetheprobe
-
+## submersible-probe
+<p>Request Json Body :
+<p>http://localhost:8080/api/v1/movetheprobe
+<p>
 {
   "gridSizeX": 6,
   "gridSizeY": 6,
