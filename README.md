@@ -4,7 +4,7 @@
  <p>2.Starting point is X=1 and Y=1 </p>
  <p>3.initial direction is EAST </p>
  <p>4.obstacles are at X=2,Y=2 and X=3,Y=3 </p>
- <p>5.Output is summary of the co-ordinates visited.Here if probe faced 4.obstacles those co-ordinates are not displayed </p>
+ <p>5.Output is summary of the co-ordinates visited.Here if probe faced obstacles those co-ordinates are not displayed </p>
 
  
 ## submersible-probe
