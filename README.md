@@ -5,14 +5,14 @@
 <p>http://localhost:8080/api/v1/movetheprobe
 <p>
 {
-  "gridSizeX": 6,
-  "gridSizeY": 6,
-  "startX": 1,
-  "startY": 1,
-  "initialDirection": "EAST",
-  "obstacles": [[2,2], [3,3]],
-  "commands": ["FORWARD", "RIGHT", "FORWARD", "FORWARD", "LEFT", "BACKWARD"]
-    
+ <p> "gridSizeX": 6,
+ <p>"gridSizeY": 6,
+ <p>"startX": 1,
+ <p>"startY": 1,
+ <p>"initialDirection": "EAST",
+ <p>"obstacles": [[2,2], [3,3]],
+ <p>"commands": ["FORWARD", "RIGHT", "FORWARD", "FORWARD", "LEFT", "BACKWARD"]
+<p>    
 }
 
 
