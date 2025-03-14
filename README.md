@@ -35,3 +35,12 @@
 <p>o Stay on the grid
 <p>o Avoid obstacles in the grid
 <p>o Print a summary of the co-ordinates visited
+
+## Run any of the  below command to see the test report
+ <p> mvn clean install 
+ <p>  mvn clean test jacoco:report
+ <p>  mvn clean verify
+ <p>  mvn -Dtest=SubmersibleProbeJunitTest test
+ <p>  mvn -Dtest=SubmersibleProbeIntegrationTests test
+   
+ <p>  test report location : target/site/jacoco/index.html
