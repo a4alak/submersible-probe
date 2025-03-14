@@ -1,12 +1,14 @@
 package com.wealthcdio.apimanagement;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +22,7 @@ import com.wealthcdio.apimanagement.model.Direction;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SubmersibleProbeApplicationTests {
+class SubmersibleProbeIntegrationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -28,13 +30,23 @@ class SubmersibleProbeApplicationTests {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	private int gridSizeX;
+	private int gridSizeY;
+	private List<int[]> obstacles;
+
+	@BeforeEach
+	void setUp() {
+		gridSizeX = 6;
+		gridSizeY = 6;
+		obstacles = List.of(new int[] { 2, 2 }, new int[] { 3, 3 });
+	}
+
 	/**
 	 * Test Case:Probe should not go beyond the grid boundaries.
 	 */
 	@Test
 	public void testGridboundaries() throws Exception {
-		InstructionCommand request = new InstructionCommand(6, 6, 1, 1, Direction.EAST,
-				List.of(new int[] { 2, 2 }, new int[] { 3, 3 }),
+		InstructionCommand request = new InstructionCommand(gridSizeX, gridSizeY, 1, 1, Direction.EAST, obstacles,
 				List.of("FORWARD", "FORWARD", "FORWARD", "FORWARD", "FORWARD"));
 
 		mockMvc.perform(post("/api/v1/movetheprobe").contentType(MediaType.APPLICATION_JSON)
@@ -48,8 +60,7 @@ class SubmersibleProbeApplicationTests {
 	@Test
 	public void testStopBeforehittingAnObstacle() throws Exception {
 
-		InstructionCommand request = new InstructionCommand(6, 6, 1, 1, Direction.EAST,
-				List.of(new int[] { 2, 2 }, new int[] { 3, 3 }),
+		InstructionCommand request = new InstructionCommand(gridSizeX, gridSizeY, 1, 1, Direction.EAST, obstacles,
 				List.of("FORWARD", "RIGHT", "FORWARD", "FORWARD", "LEFT", "BACKWARD"));
 
 		mockMvc.perform(post("/api/v1/movetheprobe").contentType(MediaType.APPLICATION_JSON)
@@ -63,7 +74,7 @@ class SubmersibleProbeApplicationTests {
 	 */
 	@Test
 	public void testInvalidCommand() throws Exception {
-		InstructionCommand request = new InstructionCommand(6, 6, 1, 1, Direction.NORTH, List.of(),
+		InstructionCommand request = new InstructionCommand(gridSizeX, gridSizeY, 1, 1, Direction.NORTH, List.of(),
 				List.of("X", "Y", "Z"));
 
 		mockMvc.perform(post("/api/v1/movetheprobe").contentType(MediaType.APPLICATION_JSON)
@@ -76,8 +87,7 @@ class SubmersibleProbeApplicationTests {
 	 */
 	@Test
 	public void testRepeatedMoves() throws Exception {
-		InstructionCommand request = new InstructionCommand(6, 6, 1, 1, Direction.EAST,
-				List.of(new int[] { 2, 2 }, new int[] { 3, 3 }),
+		InstructionCommand request = new InstructionCommand(gridSizeX, gridSizeY, 1, 1, Direction.EAST, obstacles,
 				List.of("FORWARD", "FORWARD", "FORWARD", "FORWARD", "FORWARD"));
 
 		mockMvc.perform(post("/api/v1/movetheprobe").contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +102,7 @@ class SubmersibleProbeApplicationTests {
 	 */
 	@Test
 	public void testStartingatGridedges() throws Exception {
-		InstructionCommand request = new InstructionCommand(6, 6, 6, 1, Direction.EAST, List.of(),
+		InstructionCommand request = new InstructionCommand(gridSizeX, gridSizeY, 6, 1, Direction.EAST, List.of(),
 				List.of("FORWARD", "FORWARD"));
 
 		mockMvc.perform(post("/api/v1/movetheprobe").contentType(MediaType.APPLICATION_JSON)
@@ -106,11 +116,14 @@ class SubmersibleProbeApplicationTests {
 	@Test
 	public void testFullRotation() throws Exception {
 
-		InstructionCommand request = new InstructionCommand(6, 6, 1, 1, Direction.EAST,
-				List.of(new int[] { 2, 2 }, new int[] { 3, 3 }), List.of("RIGHT", "RIGHT", "RIGHT", "RIGHT"));
+		InstructionCommand request = new InstructionCommand(gridSizeX, gridSizeY, 1, 1, Direction.EAST, obstacles,
+				List.of("RIGHT", "RIGHT", "RIGHT", "RIGHT"));
 
 		mockMvc.perform(post("/api/v1/movetheprobe").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk())
+				.andExpect(content().string(containsString("(1 , 1")));
+
+		mockMvc.perform(get("/api/v1/visited").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("(1 , 1")));
 	}
 
