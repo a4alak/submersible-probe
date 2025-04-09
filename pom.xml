@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.wealthcdio.apimanagement</groupId>
 	<artifactId>submersible-probe</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>submersible-probe</name>
 	<description>Submersible probe project for Spring Boot</description>
 	<url />
